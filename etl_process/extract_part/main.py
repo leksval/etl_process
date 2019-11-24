@@ -54,19 +54,16 @@ def most_popular_movies_on_imdb():
         movie_summary = get_movie_summary(movie_url)
         reviews = get_movie_reviews(movie_reviews_url)
         title, year, director, cast = get_movie_title_and_year(movie_url)
-
+        reviews = [review for review in reviews]
+        
         print(title, year)
         print(director)
         print(cast)
         print("_________________________________________")
-
         print(movie_summary)
         print("_________________________________________")
-
-  #      for rev in reviews:
-  #          print(rev)
-  #          print("++++++++++++++++++++++++++++++++++++++++++++")
-  #      print("--------------------------------------------")
+        print(*reviews, sep='\n ++++++++++++++++++++ \n')
+        print("--------------------------------------------")
 
 
 if __name__ == '__main__':

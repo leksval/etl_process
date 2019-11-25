@@ -6,6 +6,7 @@ import pandas as pd
 MOVIE_QUANTITY = 3
 REVIEWS_QUANTITY = 3
 CAST_QUANTITY = 3
+IMDB_CHART_LINK = 'https://www.imdb.com/chart/moviemeter'
 
 
 def get_most_popular_movies(url):
@@ -36,15 +37,15 @@ def get_movie_title_and_year(url):
     return title if original_title is None else original_title.text.split('(')[0], year, director, cast
 
 
-def get_movies_urls(movie):
+def get_movie_urls(movie):
     movie_url = 'http://www.imdb.com' + movie.a['href']
     movie_reviews_url = movie_url + 'reviews'
     return movie_url, movie_reviews_url
 
 
 def get_movie_reviews(movie_reviews_url):
-    page = requests.get(movie_reviews_url)
-    soup = BeautifulSoup(page.text, 'html.parser')
+    reviews_page = requests.get(movie_reviews_url)
+    soup = BeautifulSoup(reviews_page.text, 'html.parser')
     reviews = [review.text for review in soup.find_all('div', class_="text", limit=REVIEWS_QUANTITY)]
     return reviews
 
@@ -57,30 +58,37 @@ def print_results_in_terminal(title, year, director, cast, movie_summary, review
     print(movie_summary)
     print("_________________________________________")
     print(*reviews, sep='\n ++++++++++++++++++++ \n')
-    print("--------------------------------------------")
+    print("-----------------------------------------")
 
 
-def most_popular_movies_on_imdb():
+def print_today_date():
     today = date.today()
-    columns = ['Title', 'Year', 'Director', 'Cast', 'Movie summary', 'Reviews']
-    df = pd.DataFrame(columns=columns)
-
     print("Today's date:", today)
-    print("--------------------------------------------")
-    for movie in get_most_popular_movies('https://www.imdb.com/chart/moviemeter'):
-        movie_url, movie_reviews_url = get_movies_urls(movie)
+    print("------------------------")
 
-        movie_summary = get_movie_summary(movie_url)
-        reviews = get_movie_reviews(movie_reviews_url)
-        title, year, director, cast = get_movie_title_and_year(movie_url)
-        reviews = [review for review in reviews]
 
-        movie = {'Title': title, 'Year': year, 'Director': director,
-                 'Cast': cast, 'Movie summary': movie_summary, 'Reviews': reviews}
-        df = df.append(movie, ignore_index=True)
+def dig_out_movie_details(movie):
+    movie_url, movie_reviews_url = get_movie_urls(movie)
+
+    movie_summary = get_movie_summary(movie_url)
+    reviews = get_movie_reviews(movie_reviews_url)
+    title, year, director, cast = get_movie_title_and_year(movie_url)
+    reviews = [review for review in reviews]
+
+    movie = {'Title': title, 'Year': year, 'Director': director,
+             'Cast': cast, 'Movie summary': movie_summary, 'Reviews': reviews}
+    return movie
+
+
+def extract_movies_from_chart_from_imdb():
+    df = pd.DataFrame(columns=['Title', 'Year', 'Director', 'Cast', 'Movie summary', 'Reviews'])
+
+    for movie in get_most_popular_movies(IMDB_CHART_LINK):
+        df = df.append(dig_out_movie_details(movie), ignore_index=True)
+
+    print_today_date()
     print(df)
     df.to_csv("output.csv", index=False)
 
 
-if __name__ == '__main__':
-    most_popular_movies_on_imdb()
+extract_movies_from_chart_from_imdb()

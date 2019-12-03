@@ -7,6 +7,7 @@ MOVIE_QUANTITY = 3
 REVIEWS_QUANTITY = 3
 CAST_QUANTITY = 3
 IMDB_CHART_LINK = 'https://www.imdb.com/chart/moviemeter'
+REVIEW_TOKEN = '$&&&&$'
 
 
 def get_most_popular_movies(url):
@@ -47,11 +48,12 @@ def get_movie_urls(movie):
     return movie_url, movie_reviews_url
 
 
-def get_movie_reviews(movie_reviews_url):
+def get_movie_reviews(movie_reviews_url, REVIEW_TOKEN):
     '''Return movie reviews.'''
     reviews_page = requests.get(movie_reviews_url)
     soup = BeautifulSoup(reviews_page.text, 'html.parser')
-    reviews = [review.text for review in soup.find_all('div', class_="text", limit=REVIEWS_QUANTITY)]
+    reviews = [ review.text + REVIEW_TOKEN 
+                for review in soup.find_all('div', class_="text", limit=REVIEWS_QUANTITY)]
     return reviews
 
 '''
@@ -78,23 +80,35 @@ def dig_out_movie_details(movie):
     movie_url, movie_reviews_url = get_movie_urls(movie)
 
     movie_summary = get_movie_summary(movie_url)
-    reviews = get_movie_reviews(movie_reviews_url)
+    reviews = get_movie_reviews(movie_reviews_url, REVIEW_TOKEN)
     title, year, director, cast = get_movie_title_and_year(movie_url)
     reviews = [review for review in reviews]
 
-    movie = {'Title': title, 'Year': year, 'Director': director,
-             'Cast': cast, 'Movie summary': movie_summary, 'Reviews': reviews}
-    return movie
+    movie_details = {'Title': title, 'Year': year,
+                     'Director': director,'Movie summary': movie_summary}
+
+    movie_cast = {'Title': title, 'Cast': cast}
+    movie_reviews =  {'Title': title, 'Reviews': reviews}
+
+    return movie_details, movie_cast, movie_reviews
 
 
 def extract_movies_from_chart_from_imdb():
     '''Main extracting function which returns csv file.'''
-    df = pd.DataFrame(columns=['Title', 'Year', 'Director', 'Cast', 'Movie summary', 'Reviews'])
+
+    movies_df = pd.DataFrame(columns=[ 'Year', 'Director', 'Movie summary'])
+    title_cast_df = pd.DataFrame(columns=['Title', 'Cast'])
+    title_reviews_df = pd.DataFrame(columns=['Title', 'Reviews'])
 
     for movie in get_most_popular_movies(IMDB_CHART_LINK):
-        df = df.append(dig_out_movie_details(movie), ignore_index=True)
+        movie_details, movie_cast, movie_reviews = dig_out_movie_details(movie)
+        movies_df = movies_df.append(movie_details, ignore_index=True)
+        title_cast_df = title_cast_df.append(movie_cast, ignore_index=True)
+        title_reviews_df = title_reviews_df.append(movie_reviews, ignore_index=True)
 
-    df.to_csv("output.csv", index=False)
+    movies_df.to_csv("movies.csv", index=False)
+    title_cast_df.to_csv("title_cast.csv", index=False)
+    title_reviews_df.to_csv("title_reviews.csv", index=False)
 
 
 extract_movies_from_chart_from_imdb()

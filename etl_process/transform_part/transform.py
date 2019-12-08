@@ -8,6 +8,7 @@ INPUT_CSV_FILE_NAME = 'extracted_movies.csv'
 MOVIES_DETAILS_CSV_NAME = 'movies_details.csv'
 MOVIES_CAST_CSV_NAME = 'movies_cast.csv'
 MOVIES_REVIEWS_CSV_NAME = 'movies_reviews.csv'
+CSV_PATH = '../csv_files/'
 END_REVIEW_TOKEN = '$&&&&$'
 
 def create_row_for_each_list_element(df, list_column_to_split):
@@ -38,7 +39,7 @@ def movies_details_to_csv(movies):
 
     movies_details
 
-    movies_details.to_csv(MOVIES_DETAILS_CSV_NAME, index=False)
+    movies_details.to_csv(CSV_PATH + MOVIES_DETAILS_CSV_NAME, index=False)
 
 #####################################################################################
 def movies_reviews_to_csv(movies):
@@ -69,7 +70,7 @@ def movies_reviews_to_csv(movies):
 
     movies_reviews = create_row_for_each_list_element(movies_reviews, 'Reviews')
 
-    movies_reviews.to_csv(MOVIES_REVIEWS_CSV_NAME, index=False)
+    movies_reviews.to_csv(CSV_PATH + MOVIES_REVIEWS_CSV_NAME, index=False)
 
 ###########################################################################################
 
@@ -97,11 +98,11 @@ def movies_cast_to_csv(movies):
 
     movies_cast = create_row_for_each_list_element(movies_cast, 'Cast')
 
-    movies_cast.to_csv(MOVIES_CAST_CSV_NAME, index=False)
+    movies_cast.to_csv(CSV_PATH +MOVIES_CAST_CSV_NAME, index=False)
 
 def transform_and_generate_files():
 
-    movies = pd.read_csv(INPUT_CSV_FILE_NAME)
+    movies = pd.read_csv(CSV_PATH + INPUT_CSV_FILE_NAME)
 
     movies_details_to_csv(movies)
     movies_reviews_to_csv(movies)

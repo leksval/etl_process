@@ -9,6 +9,7 @@ CAST_QUANTITY = 3
 IMDB_CHART_LINK = 'https://www.imdb.com/chart/moviemeter'
 REVIEW_TOKEN = '$&&&&$'
 CSV_FILE_NAME = "extracted_movies.csv"
+CSV_PATH = '../csv_files/'
 
 def get_most_popular_movies(url):
     '''Return titles of most popular movies, needed to generate urls with details and reviews.'''
@@ -102,7 +103,7 @@ def extract_movies_from_chart_from_imdb():
         movies_df = movies_df.append(movie_details, ignore_index=True)
 
 
-    movies_df.to_csv(CSV_FILE_NAME, index=False)
+    movies_df.to_csv(CSV_PATH + CSV_FILE_NAME, index=False)
 
 
 

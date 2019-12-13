@@ -9,7 +9,7 @@ CAST_QUANTITY = 3
 IMDB_CHART_LINK = 'https://www.imdb.com/chart/moviemeter'
 REVIEW_TOKEN = '$&&&&$'
 CSV_FILE_NAME = "extracted_movies.csv"
-CSV_PATH = '../csv_files/'
+CSV_PATH = 'csv_files/'
 
 def get_most_popular_movies(url):
     '''Return titles of most popular movies, needed to generate urls with details and reviews.'''
@@ -93,6 +93,7 @@ def dig_out_movie_details(movie):
 
 
 def extract_movies_from_chart_from_imdb():
+    
     '''Main extracting function which returns csv file.'''
 
     movies_df = pd.DataFrame(columns=['Title', 'Year', 'Director', 'Movie summary', 'Cast', 'Reviews'])
@@ -107,4 +108,13 @@ def extract_movies_from_chart_from_imdb():
 
 
 
-extract_movies_from_chart_from_imdb()
+def run_extract(movie_quantity, reviews_quantity, cast_quantity, rootpath):
+    global MOVIE_QUANTITY
+    global REVIEWS_QUANTITY
+    global CAST_QUANTITY
+    global CSV_PATH
+    CSV_PATH = rootpath+'/csv_files/'
+    MOVIE_QUANTITY = movie_quantity
+    REVIEWS_QUANTITY = reviews_quantity
+    CAST_QUANTITY = cast_quantity
+    extract_movies_from_chart_from_imdb()

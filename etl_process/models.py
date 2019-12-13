@@ -1,7 +1,5 @@
-# from sqlalchemy.dialects import postgresql
 from . import db
-from flask import current_app as app
-from sqlalchemy_utils import database_exists, create_database, drop_database
+
 
 def reset_database():
     db.reflect()
@@ -15,16 +13,28 @@ movies_cast = db.Table('movies_cast', db.Column('movies_id', db.Integer, db.Fore
 class Movies(db.Model):
     __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255), index=True, unique=False, nullable=False)
-    year = db.Column(db.String(4), index=True, unique=False, nullable=False)
-    director = db.Column(db.String(100), index=True, unique=False, nullable=False)
-    summary = db.Column(db.Text, index=True, unique=False, nullable=False)
+    title = db.Column(db.String(255), index=True, nullable=False)
+    year = db.Column(db.Integer, index=True, nullable=False)
+    director = db.Column(db.String(100), index=True, nullable=False)
+    summary = db.Column(db.Text, index=False, nullable=False)
     cast = db.relationship('Cast', secondary=movies_cast)
+    reviews = db.relationship("Reviews")
 
 
 class Cast(db.Model):
     __tablename__ = 'cast'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    name = db.Column(db.String(255), index=True, nullable=False)
 
 
+class Reviews(db.Model):
+    __tablename__ = 'reviews'
+    id = db.Column(db.Integer, primary_key=True)
+    review = db.Column(db.Text, index=False, nullable=False)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'))
+
+
+class Ranking(db.Model):
+    __tablename__ = 'ranking'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)

@@ -108,4 +108,7 @@ def transform_and_generate_files():
     movies_reviews_to_csv(movies)
     movies_cast_to_csv(movies)
 
-transform_and_generate_files()
+def run_transform(rootpath):
+    global CSV_PATH
+    CSV_PATH = rootpath+'/csv_files/'
+    transform_and_generate_files()

@@ -10,16 +10,6 @@ def home():
     print(app.instance_path)
     return render_template("home.html")
 
-@app.route('/test')
-def create_movie():
-    title = 'John'
-    year = '2011'
-    director = 'Elton'
-    summary = 'pop'
-    new_movie = Movies(title=title, year=year, director=director, summary=summary)
-    db.session.add(new_movie)
-    db.session.commit()
-
 @app.route('/reset')
 def reset_db():
     reset_database()

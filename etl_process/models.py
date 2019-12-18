@@ -15,14 +15,14 @@ def reset_database():
 
 class MoviesCast(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    movie = db.Column(db.Integer, index=False, nullable=False)
-    cast = db.Column(db.Integer, index=False, nullable=False)
+    movie_id = db.Column(db.Integer, index=False, nullable=False)
+    cast_id = db.Column(db.Integer, index=False, nullable=False)
 
 class MoviesRanking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    movie = db.Column(db.Integer, index=False, nullable=False)
+    movie_id = db.Column(db.Integer, index=False, nullable=False)
     ranking = db.Column(db.Integer, index=False, nullable=False)
-    ranking = db.Column(db.Integer, index=False, nullable=False)
+    date_id = db.Column(db.Integer, index=False, nullable=False)
 
 class Movies(db.Model):
     __tablename__ = 'movies'
@@ -47,10 +47,10 @@ class Reviews(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.Text,unique=True, index=False, nullable=False)
-    movie = db.Column(db.Integer, index=False, nullable=False)
+    movie_id = db.Column(db.Integer,unique=False, index=False, nullable=False)
 
 
 class RankingDate(db.Model):
     __tablename__ = 'rankingdate'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.Date, unique=True, nullable=False)

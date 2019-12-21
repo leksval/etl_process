@@ -1,4 +1,4 @@
-from .models import db, Director, Movies, RankingDate, MoviesRanking, Cast, MoviesCast, Reviews
+from .models import db, Director, Movies, Ranking, Cast, MoviesCast, Reviews
 import pandas as pd
 from datetime import datetime
 MOVIES_DETAILS_CSV_NAME = 'movies_details.csv'
@@ -8,20 +8,20 @@ CSV_PATH = './csv_files/'
 
 
 def load_movies_details():
-    '''Load date'''
+    '''Insert ranking date to database'''
     data = pd.read_csv(CSV_PATH + MOVIES_DETAILS_CSV_NAME).T.to_dict()
-    date_exist = RankingDate.query.filter(RankingDate.date == datetime.now().date()).first()
-    if not date_exist:
-        db.session.add(RankingDate(date=datetime.now().date()))
-        db.session.commit()
-    '''Load directors'''
+    # date_exist = RankingDate.query.filter(RankingDate.date == datetime.now().date()).first()
+    # if not date_exist:
+    #     db.session.add(RankingDate(date=datetime.now().date()))
+    #     db.session.commit()
+    '''Insert directors to database'''
     for i in range(len(data)):
         director_name = data[i]['Director']
         director_exist = Director.query.filter(Director.name == director_name).first()
         if not director_exist:
             db.session.add(Director(name=director_name))
             db.session.commit()
-        ''' Load movies '''
+        ''' Insert movies to database '''
         title = data[i]['Title']
         year = data[i]['Year']
         summary = data[i]['Movie summary']
@@ -31,16 +31,19 @@ def load_movies_details():
         if not movie_exist:
             db.session.add(new_movie)
             db.session.commit()
-        '''Load ranking'''
-        date_id = RankingDate.query.filter(RankingDate.date == datetime.now().date()).first().id
-        movie_id = Movies.query.filter(Movies.title == new_movie.title and Movies.year == new_movie.year and Movies.director == new_movie.director).first().id
-        ranking_exist = MoviesRanking.query.filter(MoviesRanking.date_id == date_id and MoviesRanking.movie_id == movie_id).first()
+        db.session.close()
+        '''Insert ranking to database'''
+        date = datetime.now().date()
+        movie_id = Movies.query.filter(Movies.title == title and Movies.year == year).first().id
+        ranking_exist = Ranking.query.filter(Ranking.date == date or Ranking.movie_id == movie_id).first()
         if not ranking_exist:
-            db.session.add(MoviesRanking(movie_id=movie_id, ranking=data[i]['Ranking Position'], date_id=date_id))
+            db.session.add(Ranking(movie_id=movie_id, ranking=data[i]['Ranking Position'], date=date))
             db.session.commit()
     db.session.close()
     
+
 def load_movies_cast():
+    '''Insert movies cast to database'''
     data = pd.read_csv(CSV_PATH + MOVIES_CAST_CSV_NAME).T.to_dict()
     for i in range(len(data)):
         name = data[i]['Cast']
@@ -55,8 +58,11 @@ def load_movies_cast():
         if not moviecast_exist:
             db.session.add(MoviesCast(movie_id=movie_id, cast_id=cast_id))
             db.session.commit()
+    db.session.close()
+
 
 def load_movies_revews():
+    ''' Insert movies revievs to database '''
     data = pd.read_csv(CSV_PATH + MOVIES_REVIEWS_CSV_NAME).T.to_dict()
     for i in range(len(data)):
         movie_id = Movies.query.filter(Movies.title == data[i]['Title'].strip()).first().id
@@ -65,7 +71,7 @@ def load_movies_revews():
         if not review_exist:
             db.session.add(Reviews(movie_id=movie_id, review=review))
             db.session.commit()
-
+    db.session.close()
 
 
 def run_load(rootpath):
@@ -74,3 +80,4 @@ def run_load(rootpath):
     load_movies_details()
     load_movies_cast()
     load_movies_revews()
+

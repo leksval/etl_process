@@ -18,11 +18,17 @@ class MoviesCast(db.Model):
     movie_id = db.Column(db.Integer, index=False, nullable=False)
     cast_id = db.Column(db.Integer, index=False, nullable=False)
 
-class MoviesRanking(db.Model):
+# class MoviesRanking(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     movie_id = db.Column(db.Integer, index=False, nullable=False)
+#     ranking = db.Column(db.Integer, index=False, nullable=False)
+#     date_id = db.Column(db.Integer, index=False, nullable=False)
+
+class Ranking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     movie_id = db.Column(db.Integer, index=False, nullable=False)
     ranking = db.Column(db.Integer, index=False, nullable=False)
-    date_id = db.Column(db.Integer, index=False, nullable=False)
+    date = db.Column(db.Date, index=False,unique=False, nullable=False)
 
 class Movies(db.Model):
     __tablename__ = 'movies'
@@ -50,7 +56,7 @@ class Reviews(db.Model):
     movie_id = db.Column(db.Integer,unique=False, index=False, nullable=False)
 
 
-class RankingDate(db.Model):
-    __tablename__ = 'rankingdate'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, unique=True, nullable=False)
+# class RankingDate(db.Model):
+#     __tablename__ = 'rankingdate'
+#     id = db.Column(db.Integer, primary_key=True)
+#     date = db.Column(db.Date, unique=True, nullable=False)

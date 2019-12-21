@@ -1,0 +1,93 @@
+{% extends "template.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"> Ranking</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table dataTable" id="example">
+              <thead class=" text-primary">
+                <th>
+                  Date
+                </th>
+                <th>
+                  Position
+                </th>
+                <th>
+                  Title
+                </th>
+                <th>
+                  Director
+                </th>
+                <th class="text-right">
+                  Year
+                </th>
+              </thead>
+              <tbody>
+                {%for x in ranking%}
+            <tr>
+                <td>{{x.date}}</td>
+                <td>{{x.ranking}}</td>
+                {%for m in movies%}
+                    {%if m.id ==x.movie_id%}
+                    <td>{{m.title}}</td>
+                    {%for d in director%}
+                        {%if d.id ==m.director%}
+                             <td>{{d.name}}</td>
+                        {%endif%}
+                    {%endfor%}
+                    <td class="text-right">{{m.year}}</td>
+                    {%endif%}
+                {%endfor%}
+
+            </tr>
+            {%endfor%}
+                
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                  </tr>
+              </tfoot>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+    $(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#example tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table = $('#example').DataTable();
+ 
+    // Apply the search
+    table.columns().every( function () {
+        var that = this;
+ 
+        $( 'input', this.footer() ).on( 'keyup change clear', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+} );
+    </script>
+{% endblock %}

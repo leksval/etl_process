@@ -1,0 +1,100 @@
+{% extends "template.html" %}
+{% block content %}
+
+<!-- movie 
+    director 
+    reviews 
+    moviesCast 
+    cast 
+    ranking -->
+<div class="row">
+    <div class="col-md-8">
+    <div class="card card-user">
+        <div class="card-header">
+          <h5 class="card-title">Movie</h5>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="row">
+              <div class="col-md-7 pr-1">
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" class="form-control" disabled="" placeholder="" value="{{movie.title}}">
+                </div>
+              </div>
+              <div class="col-md-3 px-1">
+                <div class="form-group">
+                  <label>Director</label>
+                  <input type="text" class="form-control" disabled="" placeholder="" value="{{director.name}}">
+                </div>
+              </div>
+              <div class="col-md-2 pl-1">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Release year</label>
+                  <input type="text" class="form-control" disabled="" placeholder="" value="{{movie.year}}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Summary</label>
+                  <textarea class="form-control textarea" disabled="">{{movie.summary}}</textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+</div>
+      <!-- ranking table-->
+
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Ranking</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table dataTable" id="example">
+                  <thead class=" text-primary">
+                    <th>
+                      Date
+                    </th>
+                    <th>
+                      Position
+                    </th>
+                  </thead>
+                  <tbody>
+                    {%for r in ranking%}
+                <tr>
+                    <td>{{r.date}}</td>
+                    <td>{{r.ranking}}</td>    
+                </tr>
+                {%endfor%}
+                    
+                  </tbody>
+                  <tfoot>
+                      <tr>
+                        <th>Date</th>
+                        <th>Position</th>
+                      </tr>
+                  </tfoot>
+                </table>
+    
+              </div>
+            </div>
+          </div>
+          
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+ 
+    // DataTable
+    var table = $('#example').DataTable({});
+} );
+    </script>
+{% endblock %}

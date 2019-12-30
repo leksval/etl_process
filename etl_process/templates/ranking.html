@@ -5,7 +5,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title"> Ranking</h4>
+          <h4 class="card-title">{{title}}</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -24,7 +24,7 @@
                   Director
                 </th>
                 <th class="text-right">
-                  Year
+                  Release year
                 </th>
               </thead>
               <tbody>
@@ -50,11 +50,11 @@
               </tbody>
               <tfoot>
                   <tr>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
+                    <th>Date</th>
+                    <th>Position</th>
+                    <th>Title</th>
+                    <th>Director</th>
+                    <th class="text-right">Release year</th>
                   </tr>
               </tfoot>
             </table>
@@ -74,7 +74,9 @@
     } );
  
     // DataTable
-    var table = $('#example').DataTable();
+    var table = $('#example').DataTable({
+      "order": [[0, "desc"]]
+    });
  
     // Apply the search
     table.columns().every( function () {

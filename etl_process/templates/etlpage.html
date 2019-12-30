@@ -1,94 +1,52 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+{% extends "template.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h5 class="card-title">ETL process</h5>
+        </div>
+        <div class="card-body "><div style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+        <div class="card card-user">
 
-    <!-- <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" /> -->
-    	<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"> -->
-    <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-	<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script> -->
-	<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script> -->
-
-    <meta charset=utf-8 />
-    <title>DataTables - JS Bin</title>
-  </head>
-  <body>
-    <div class="container">
-        <table class="table dataTable" id="example">
-            <thead class=" text-primary">
-              <th>
-                Date
-              </th>
-              <th>
-                Position
-              </th>
-              <th>
-                Title
-              </th>
-              <th>
-                Director
-              </th>
-              <th class="text-right">
-                Year
-              </th>
-            </thead>
-            <tbody>
-              {%for x in ranking%}
-          <tr>
-              <td>{{x.date}}</td>
-              <td>{{x.ranking}}</td>
-              {%for m in movies%}
-                  {%if m.id ==x.movie_id%}
-                  <td>{{m.title}}</td>
-                  {%for d in director%}
-                      {%if d.id ==m.director%}
-                           <td>{{d.name}}</td>
-                      {%endif%}
-                  {%endfor%}
-                  <td class="text-right">{{m.year}}</td>
-                  {%endif%}
-              {%endfor%}
-
-          </tr>
-          {%endfor%}
-              
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-          </table>
-          <script>$(document).ready(function() {
-            $('#example').DataTable( {
-                initComplete: function () {
-                    this.api().columns().every( function () {
-                        var column = this;
-                        var select = $('<select><option value=""></option></select>')
-                            .appendTo( $(column.footer()).empty() )
-                            .on( 'change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val()
-                                );
-         
-                                column
-                                    .search( val ? '^'+val+'$' : '', true, false )
-                                    .draw();
-                            } );
-         
-                        column.data().unique().sort().each( function ( d, j ) {
-                            select.append( '<option value="'+d+'">'+d+'</option>' )
-                        } );
-                    } );
-                }
-            } );
-        } );</script>
+            <div class="card-body">
+              <form action="/extract" method="POST">
+                <div class="row justify-content-md-center">
+                  <div class="col-md-1 px-1">
+                    <div class="form-group">
+                      <label>Movie quantity</label>
+                      <input type="number" name="movieQuantity" max="100" min="1" class="form-control" placeholder="" required>
+                    </div>
+                  </div>
+                  <div class="col-md-1 px-1">
+                    <div class="form-group">
+                      <label>Reviews quantity</label>
+                      <input type="number" name="reviewsQuantity" max="100" min="1" class="form-control" placeholder="" required>
+                    </div>
+                  </div>
+                  <div class="col-md-1 px-1">
+                    <div class="form-group">
+                      <label>Cast quantity</label>
+                      <input type="number" name="castQuantity" max="100" min="1" class="form-control" placeholder="" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="update ml-auto mr-auto">
+                    <button type="submit" formaction="/fulletl" class="btn btn-primary btn-round">ETL</button>
+                    <button type="submit"  class="btn btn-primary btn-round">Extract</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>        </div>
+        <div class="card-footer ">
+          <hr>
+          <div class="stats">
+            <i class="fa fa-history"></i> Updated 3 minutes ago
+          </div>
+        </div>
+      </div>
     </div>
-    
-  </body>
-</html>
+  </div>
+{% endblock %}

@@ -105,6 +105,8 @@ def extract_movies_from_chart_from_imdb():
 
 
     movies_df.to_csv(CSV_PATH + CSV_FILE_NAME, index=False)
+    count = len(movies_df.index)
+    return count
 
 
 
@@ -117,4 +119,5 @@ def run_extract(movie_quantity, reviews_quantity, cast_quantity, rootpath):
     MOVIE_QUANTITY = movie_quantity
     REVIEWS_QUANTITY = reviews_quantity
     CAST_QUANTITY = cast_quantity
-    extract_movies_from_chart_from_imdb()
+    count = extract_movies_from_chart_from_imdb()
+    return count

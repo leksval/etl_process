@@ -1,3 +1,6 @@
+"""
+Module to run application
+"""
 from etl_process import create_app
 
 app = create_app()

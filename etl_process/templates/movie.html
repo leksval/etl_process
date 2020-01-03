@@ -74,12 +74,12 @@
                 {%endfor%}
                     
                   </tbody>
-                  <tfoot>
+                  <!-- <tfoot>
                       <tr>
                         <th>Date</th>
                         <th>Position</th>
                       </tr>
-                  </tfoot>
+                  </tfoot> -->
                 </table>
     
               </div>
@@ -89,12 +89,92 @@
 
     </div>
 </div>
+<!-- review and cast -->
 
+<div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Reviews</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table dataTable" id="example2">
+              <thead class=" text-primary">
+                <th>
+                  Review
+                </th>
+              </thead>
+              <tbody>
+                {%for rev in reviews%}
+                <tr>
+                    <td>{{rev.review}}</td>
+                </tr>
+                {%endfor%}
+                
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Cast</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table dataTable" id="example3">
+                <thead class=" text-primary">
+                  <th>
+                    Name
+                  </th>
+                </thead>
+                <tbody>
+                  {%for movc in moviesCast%}
+              <tr>
+                  {%for c in cast%}
+                  {%if movc.cast_id == c.id%}
+                  <td>{{c.name}}</td> 
+                  {%endif%}
+                  {%endfor%}  
+              </tr>
+              {%endfor%}
+                  
+                </tbody>
+                <!-- <tfoot>
+                    <tr>
+                      <th>Date</th>
+                      <th>Position</th>
+                    </tr>
+                </tfoot> -->
+              </table>
+  
+            </div>
+          </div>
+        </div>
+        
+
+  </div>
+    </div>
 <script>
     $(document).ready(function() {
  
     // DataTable
-    var table = $('#example').DataTable({});
+    var table = $('#example').DataTable({
+        "order": [[0, "desc"]],
+        "scrollY": "200px",
+        "scrollCollapse": true
+    });
+    var table2 = $('#example2').DataTable({
+        "scrollY": "300px"
+    });
+    var table3 = $('#example3').DataTable({
+        "scrollY": "300px"
+    });
 } );
     </script>
 {% endblock %}

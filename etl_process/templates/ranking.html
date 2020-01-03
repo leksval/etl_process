@@ -34,7 +34,7 @@
                 <td>{{x.ranking}}</td>
                 {%for m in movies%}
                     {%if m.id ==x.movie_id%}
-                    <td>{{m.title}}</td>
+                    <td><a href="/movie/{{m.id}}">{{m.title}}</a></td>
                     {%for d in director%}
                         {%if d.id ==m.director%}
                              <td>{{d.name}}</td>

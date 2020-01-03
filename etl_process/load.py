@@ -55,7 +55,7 @@ def load_movies_cast():
         mov = Movies(title=data[i]['Title'])
         movie_id = Movies.query.filter(Movies.title == data[i]['Title'].strip()).first().id
         cast_id = Cast.query.filter(Cast.name == name).first().id
-        moviecast_exist = MoviesCast.query.filter(MoviesCast.movie_id == movie_id and MoviesCast.cast_id == cast_id).first()
+        moviecast_exist = MoviesCast.query.filter(MoviesCast.movie_id == movie_id, MoviesCast.cast_id == cast_id).first()
         if not moviecast_exist:
             db.session.add(MoviesCast(movie_id=movie_id, cast_id=cast_id))
             db.session.commit()
@@ -73,6 +73,7 @@ def load_movies_reviews():
         if not review_exist:
             db.session.add(Reviews(movie_id=movie_id, review=review))
             db.session.commit()
+            db.session.close()
     db.session.close()
 
 

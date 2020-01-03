@@ -13,7 +13,8 @@ from datetime import datetime, date
 @app.route('/')
 def home():
     """ Render home page"""
-    return render_template("home.html")
+    # return render_template("home.html")
+    return redirect('/etl')
 
 
 @app.route('/etl')
@@ -109,4 +110,5 @@ def show_movie_details(id=None):
         director=director,
         reviews=reviews,
         moviesCast=movies_cast,
-        ranking=ranking)
+        ranking=ranking,
+        cast=cast)

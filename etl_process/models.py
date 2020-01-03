@@ -64,6 +64,6 @@ class Reviews(db.Model):
     CaReviews table model
     """
     __tablename__ = 'reviews'
-    id = db.Column(db.Integer, primary_key=True)
-    review = db.Column(db.Text, unique=True, index=False, nullable=False)
+    id = db.Column(db.BigInteger, primary_key=True, index=False)
+    review = db.Column(db.Text, unique=False, index=False, nullable=False)
     movie_id = db.Column(db.Integer, unique=False, index=False, nullable=False)

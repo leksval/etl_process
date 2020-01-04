@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 MOVIES_DETAILS_CSV_NAME = 'movies_details.csv'
 MOVIES_CAST_CSV_NAME = 'movies_cast.csv'
-MOVIES_REVIEWS_CSV_NAME = 'movies_reviews.csv'
+MOVIES_REVIEWS_CSV_NAME = 'movies_reviews_and_predictions.csv'
 CSV_PATH = './csv_files/'
 
 
@@ -69,9 +69,10 @@ def load_movies_reviews():
     for i in range(len(data)):
         movie_id = Movies.query.filter(Movies.title == data[i]['Title'].strip()).first().id
         review = data[i]['Reviews'].strip()
+        rating = float(data[i]['Rating'])*100000
         review_exist = Reviews.query.filter(Reviews.review == review).first()
         if not review_exist:
-            db.session.add(Reviews(movie_id=movie_id, review=review))
+            db.session.add(Reviews(movie_id=movie_id, review=review, rating=int(rating)))
             db.session.commit()
             db.session.close()
     db.session.close()

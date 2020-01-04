@@ -104,11 +104,13 @@
                 <th>
                   Review
                 </th>
+                <th>Rating</th>
               </thead>
               <tbody>
                 {%for rev in reviews%}
                 <tr>
                     <td>{{rev.review}}</td>
+                    <td>{{rev.rating}}</td>
                 </tr>
                 {%endfor%}
                 

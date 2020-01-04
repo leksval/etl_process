@@ -67,3 +67,4 @@ class Reviews(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, index=False)
     review = db.Column(db.Text, unique=False, index=False, nullable=False)
     movie_id = db.Column(db.Integer, unique=False, index=False, nullable=False)
+    rating = db.Column(db.Integer, unique=False, index=False, nullable=False)

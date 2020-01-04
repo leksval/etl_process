@@ -6,6 +6,7 @@ from .models import db, Movies, reset_database, MoviesCast, Director, Cast, Revi
 from flask import render_template, request, redirect
 from .extract_part.extract import run_extract
 from .transform_part.transform import run_transform
+from .transform_part.movie_reviews_rating_adding import run_rating_generate
 from .load import run_load
 from datetime import datetime, date
 
@@ -68,6 +69,7 @@ def etl_imdb():
 def transform_imdb():
     """Route to transform data from imdb and redirect to load data page"""
     run_transform(app.root_path)
+    run_rating_generate(app.root_path)
     return render_template("load.html")
 
 

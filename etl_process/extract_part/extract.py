@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from datetime import date
 import requests
 import pandas as pd
+from pathlib import Path
 
 MOVIE_QUANTITY = 3
 REVIEWS_QUANTITY = 3
@@ -116,6 +117,7 @@ def run_extract(movie_quantity, reviews_quantity, cast_quantity, rootpath):
     global CAST_QUANTITY
     global CSV_PATH
     CSV_PATH = rootpath+'/csv_files/'
+    Path(CSV_PATH).mkdir(parents=True, exist_ok=True)
     MOVIE_QUANTITY = movie_quantity
     REVIEWS_QUANTITY = reviews_quantity
     CAST_QUANTITY = cast_quantity

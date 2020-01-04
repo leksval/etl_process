@@ -110,7 +110,15 @@
                 {%for rev in reviews%}
                 <tr>
                     <td>{{rev.review}}</td>
-                    <td>{{rev.rating}}</td>
+                    {%if rev.rating >= 100%}
+                    <td>Positive</td>
+                    {%elif rev.rating < 100%}
+                      {%if rev.rating > 50%}
+                      <td>Neutral</td>
+                      {%else%}
+                      <td>Negative</td>
+                      {%endif%}
+                    {%endif%}
                 </tr>
                 {%endfor%}
                 

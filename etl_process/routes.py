@@ -61,6 +61,7 @@ def etl_imdb():
     cast_quantity = int(request.form['castQuantity'])
     run_extract(movie_quantity, reviews_quantity, cast_quantity, app.root_path)
     run_transform(app.root_path)
+    run_rating_generate(app.root_path)
     run_load(app.root_path)
     return redirect('/ranking')
 

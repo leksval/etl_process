@@ -1,0 +1,70 @@
+.. ETL IMDB documentation master file, created by
+   sphinx-quickstart on Sun Jan  5 22:39:12 2020.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to ETL IMDB's documentation!
+====================================
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+etl\_process.__init__ module
+----------------------------
+
+.. automodule:: etl_process.__init__
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+etl\_process.load module
+------------------------
+
+.. automodule:: etl_process.load
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+etl\_process.extract_part.extract module
+----------------------------------------
+
+.. automodule:: etl_process.extract_part.extract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members:
+
+etl\_process.transform_part.transform module
+--------------------------------------------
+
+.. automodule:: etl_process.transform_part.transform
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members:
+
+etl\_process.transform_part.movie_reviews_rating_adding module
+--------------------------------------------------------------
+
+.. automodule:: etl_process.transform_part.movie_reviews_rating_adding
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members:
+
+etl\_process.models module
+--------------------------
+
+.. automodule:: etl_process.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

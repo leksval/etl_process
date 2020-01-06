@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to ETL IMDB’s documentation! &#8212; ETL IMDB 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-etl-imdb-s-documentation">
+<h1>Welcome to ETL IMDB’s documentation!<a class="headerlink" href="#welcome-to-etl-imdb-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+<div  class="section"><h2>Techs</h2>
+<a href = "https://www.python.org/">[Python]</a> - Main backend programming language<br>
+<a href = "https://pypi.org/project/beautifulsoup4/">[BeautifulSoup]</a> - Web scraper<br>
+<a href = "https://www.tensorflow.org/install">[TensorFlow]</a> - Used in ML algorithm<br>
+<a href = "https://docs.docker.com/">[Docker]</a> - just docker<br>
+<a href = "https://pypi.org/project/Flask/">[Flask]</a> - web framework<br>
+<a href = "https://www.postgresql.org/">[PostgreSQL]</a> - database<br>
+<a href = "https://getbootstrap.com/">[Bootstrap]</a> - web web web<br>
+<a href = "https://datatables.net/">[Datatables]</a> - fun with tables<br></div>
+</div>
+<div  class="section"><h2>Requirements</h2>
+Linux or Lindows Pro<br>
+docker<br>
+pandas<br>
+beautifulsoup4<br>
+flask<br>
+flask-sqlalchemy<br>
+psycopg2<br>
+tensorflow<br>
+</div>
+<div><div  class="section"><h2>Instalation </h2>
+1.1. Download files from Github repository:<br>
+https://github.com/leksval/etl_process<br><br>
+
+1.2. Then install packages. File with required packages: /etl_process/requirements.txt<br>
+pip install ./etl_process/requirements.txt<br><br>
+
+1.3. Then to set up SQL in terminal run coommand:<br>
+docker run --name etl_imdb -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=imdb -d -p 5432:5432 postgres<br><br>
+
+1.4. Run main file in terminal:<br>
+python wsgi.py<br><br>
+
+1.5 Use link generated in terminal to launch app in browser.<br>
+
+</div>
+<div class="section" id="module-etl_process.__init__">
+<span id="etl-process-init-module"></span><h2>etl_process.__init__ module<a class="headerlink" href="#module-etl_process.__init__" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="etl_process.__init__.create_app">
+<code class="sig-prename descclassname">etl_process.__init__.</code><code class="sig-name descname">create_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/__init__.html#create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.__init__.create_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the core application</p>
+</dd></dl>
+
+<div class="section" id="module-etl_process.load">
+<span id="etl-process-load-module"></span><h2>etl_process.load module<a class="headerlink" href="#module-etl_process.load" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="etl_process.load.load_movies_cast">
+<code class="sig-prename descclassname">etl_process.load.</code><code class="sig-name descname">load_movies_cast</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/load.html#load_movies_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.load.load_movies_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load movie cast from csv file to database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.load.load_movies_details">
+<code class="sig-prename descclassname">etl_process.load.</code><code class="sig-name descname">load_movies_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/load.html#load_movies_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.load.load_movies_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load movie details and ranking from csv file to database.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.load.load_movies_reviews">
+<code class="sig-prename descclassname">etl_process.load.</code><code class="sig-name descname">load_movies_reviews</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/load.html#load_movies_reviews"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.load.load_movies_reviews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load movie reviews to database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.load.run_load">
+<code class="sig-prename descclassname">etl_process.load.</code><code class="sig-name descname">run_load</code><span class="sig-paren">(</span><em class="sig-param">rootpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/load.html#run_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.load.run_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set path to csv files and run load functions</p>
+<dl class="simple">
+<dt>rootpath<span class="classifier">string</span></dt><dd><p>Path to application root folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-etl_process.extract_part.extract">
+<span id="etl-process-extract-part-extract-module"></span><h2>etl_process.extract_part.extract module<a class="headerlink" href="#module-etl_process.extract_part.extract" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="etl_process.extract_part.extract.dig_out_movie_details">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">dig_out_movie_details</code><span class="sig-paren">(</span><em class="sig-param">movie</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#dig_out_movie_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.dig_out_movie_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns movie details and reviews.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.extract_movies_from_chart_from_imdb">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">extract_movies_from_chart_from_imdb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#extract_movies_from_chart_from_imdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.extract_movies_from_chart_from_imdb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main extracting function which returns csv file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.get_most_popular_movies">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">get_most_popular_movies</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#get_most_popular_movies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.get_most_popular_movies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return titles of most popular movies, needed to generate urls with details and reviews.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.get_movie_reviews">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">get_movie_reviews</code><span class="sig-paren">(</span><em class="sig-param">movie_reviews_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#get_movie_reviews"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.get_movie_reviews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return movie reviews.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.get_movie_summary">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">get_movie_summary</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#get_movie_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.get_movie_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return movie summary.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.get_movie_title_and_year">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">get_movie_title_and_year</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#get_movie_title_and_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.get_movie_title_and_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return movie title and year.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.get_movie_urls">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">get_movie_urls</code><span class="sig-paren">(</span><em class="sig-param">movie</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#get_movie_urls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.get_movie_urls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return urls of movie details and reviews.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.extract_part.extract.run_extract">
+<code class="sig-prename descclassname">etl_process.extract_part.extract.</code><code class="sig-name descname">run_extract</code><span class="sig-paren">(</span><em class="sig-param">movie_quantity</em>, <em class="sig-param">reviews_quantity</em>, <em class="sig-param">cast_quantity</em>, <em class="sig-param">rootpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/extract_part/extract.html#run_extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.extract_part.extract.run_extract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-etl_process.transform_part.transform">
+<span id="etl-process-transform-part-transform-module"></span><h2>etl_process.transform_part.transform module<a class="headerlink" href="#module-etl_process.transform_part.transform" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="etl_process.transform_part.transform.create_row_for_each_list_element">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">create_row_for_each_list_element</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">list_column_to_split</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#create_row_for_each_list_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.create_row_for_each_list_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creating row in dataframe for each list element.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.transform.movies_cast_to_csv">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">movies_cast_to_csv</code><span class="sig-paren">(</span><em class="sig-param">movies</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#movies_cast_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.movies_cast_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save movie cast to csv file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.transform.movies_details_to_csv">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">movies_details_to_csv</code><span class="sig-paren">(</span><em class="sig-param">movies</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#movies_details_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.movies_details_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save movie details to csv file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.transform.movies_reviews_to_csv">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">movies_reviews_to_csv</code><span class="sig-paren">(</span><em class="sig-param">movies</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#movies_reviews_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.movies_reviews_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save movie reviews to csv file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.transform.run_transform">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">run_transform</code><span class="sig-paren">(</span><em class="sig-param">rootpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#run_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.run_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.transform.transform_and_generate_files">
+<code class="sig-prename descclassname">etl_process.transform_part.transform.</code><code class="sig-name descname">transform_and_generate_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/transform.html#transform_and_generate_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.transform.transform_and_generate_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-etl_process.transform_part.movie_reviews_rating_adding">
+<span id="etl-process-transform-part-movie-reviews-rating-adding-module"></span><h2>etl_process.transform_part.movie_reviews_rating_adding module<a class="headerlink" href="#module-etl_process.transform_part.movie_reviews_rating_adding" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.apply_model_and_add_rating_to_df">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">apply_model_and_add_rating_to_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#apply_model_and_add_rating_to_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.apply_model_and_add_rating_to_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create dataframe with movie review and rating</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.format_review">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">format_review</code><span class="sig-paren">(</span><em class="sig-param">review_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#format_review"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.format_review" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formating reviews string and separating them to list elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.generate_csv_with_rating">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">generate_csv_with_rating</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#generate_csv_with_rating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.generate_csv_with_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate csv file witch predictions based on reviews by applying ml model.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.load_data_model_and_csv">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">load_data_model_and_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#load_data_model_and_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.load_data_model_and_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loading all data sources</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.make_word_index">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">make_word_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#make_word_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.make_word_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loading and modyfing word index dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.review_encode">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">review_encode</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#review_encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.review_encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encoding words from text to dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.transform_part.movie_reviews_rating_adding.run_rating_generate">
+<code class="sig-prename descclassname">etl_process.transform_part.movie_reviews_rating_adding.</code><code class="sig-name descname">run_rating_generate</code><span class="sig-paren">(</span><em class="sig-param">rootpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/transform_part/movie_reviews_rating_adding.html#run_rating_generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.transform_part.movie_reviews_rating_adding.run_rating_generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-etl_process.models">
+<span id="etl-process-models-module"></span><h2>etl_process.models module<a class="headerlink" href="#module-etl_process.models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="etl_process.models.Cast">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">Cast</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#Cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.Cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Cast table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.Cast.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.Cast.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Cast.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#etl_process.models.Cast.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="etl_process.models.Director">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">Director</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#Director"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.Director" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Director table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.Director.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.Director.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Director.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#etl_process.models.Director.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="etl_process.models.Movies">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">Movies</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#Movies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.Movies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Movies table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.Movies.director">
+<code class="sig-name descname">director</code><a class="headerlink" href="#etl_process.models.Movies.director" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Movies.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.Movies.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Movies.summary">
+<code class="sig-name descname">summary</code><a class="headerlink" href="#etl_process.models.Movies.summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Movies.title">
+<code class="sig-name descname">title</code><a class="headerlink" href="#etl_process.models.Movies.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Movies.year">
+<code class="sig-name descname">year</code><a class="headerlink" href="#etl_process.models.Movies.year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="etl_process.models.MoviesCast">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">MoviesCast</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#MoviesCast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.MoviesCast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Movie cast table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.MoviesCast.cast_id">
+<code class="sig-name descname">cast_id</code><a class="headerlink" href="#etl_process.models.MoviesCast.cast_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.MoviesCast.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.MoviesCast.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.MoviesCast.movie_id">
+<code class="sig-name descname">movie_id</code><a class="headerlink" href="#etl_process.models.MoviesCast.movie_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="etl_process.models.Ranking">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">Ranking</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#Ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.Ranking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Ranking table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.Ranking.date">
+<code class="sig-name descname">date</code><a class="headerlink" href="#etl_process.models.Ranking.date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Ranking.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.Ranking.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Ranking.movie_id">
+<code class="sig-name descname">movie_id</code><a class="headerlink" href="#etl_process.models.Ranking.movie_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Ranking.ranking">
+<code class="sig-name descname">ranking</code><a class="headerlink" href="#etl_process.models.Ranking.ranking" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="etl_process.models.Reviews">
+<em class="property">class </em><code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">Reviews</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#Reviews"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.Reviews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>CaReviews table model</p>
+<dl class="attribute">
+<dt id="etl_process.models.Reviews.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#etl_process.models.Reviews.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Reviews.movie_id">
+<code class="sig-name descname">movie_id</code><a class="headerlink" href="#etl_process.models.Reviews.movie_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Reviews.rating">
+<code class="sig-name descname">rating</code><a class="headerlink" href="#etl_process.models.Reviews.rating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="etl_process.models.Reviews.review">
+<code class="sig-name descname">review</code><a class="headerlink" href="#etl_process.models.Reviews.review" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="etl_process.models.reset_database">
+<code class="sig-prename descclassname">etl_process.models.</code><code class="sig-name descname">reset_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/etl_process/models.html#reset_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#etl_process.models.reset_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all data from database and recreate tables for fresh use</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">ETL IMDB</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Bartosz Lenart, Krzysztof Koczwara.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>etl_process.transform_part.movie_reviews_rating_adding &#8212; ETL IMDB 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for etl_process.transform_part.movie_reviews_rating_adding</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+
+<span class="c1"># In[10]:</span>
+
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="c1"># In[11]:</span>
+
+
+<span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="s1">&#39;model.h5&#39;</span>
+<span class="n">CSV_FILE_NAME</span> <span class="o">=</span> <span class="s1">&#39;../csv_files/movies_reviews.csv&#39;</span>
+<span class="n">GENERETED_FILE_WITH_RATING_NAME</span> <span class="o">=</span> <span class="s1">&#39;movies_reviews_and_predictions.csv&#39;</span>
+
+
+<span class="c1"># In[12]:</span>
+
+
+<div class="viewcode-block" id="load_data_model_and_csv"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.load_data_model_and_csv">[docs]</a><span class="k">def</span> <span class="nf">load_data_model_and_csv</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Loading all data sources&#39;&#39;&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">imdb</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">)</span>
+    <span class="n">movies_reviews</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CSV_FILE_NAME</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">movies_reviews</span></div>
+
+
+<span class="c1"># In[13]:</span>
+
+
+<div class="viewcode-block" id="make_word_index"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.make_word_index">[docs]</a><span class="k">def</span> <span class="nf">make_word_index</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Loading and modyfing word index dictionary&#39;&#39;&#39;</span>
+    <span class="n">word_index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_word_index</span><span class="p">()</span>
+    <span class="n">word_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:(</span><span class="n">v</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">word_index</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;PAD&gt;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;START&gt;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;UNK&gt;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;INUSED&gt;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">return</span> <span class="n">word_index</span></div>
+
+
+<span class="c1"># In[14]:</span>
+
+
+<div class="viewcode-block" id="review_encode"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.review_encode">[docs]</a><span class="k">def</span>  <span class="nf">review_encode</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Encoding words from text to dictionary&#39;&#39;&#39;</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">word_index</span><span class="p">:</span>
+            <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_index</span><span class="p">[</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">encoded</span></div>
+
+
+<span class="c1"># In[15]:</span>
+
+
+<div class="viewcode-block" id="format_review"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.format_review">[docs]</a><span class="k">def</span> <span class="nf">format_review</span><span class="p">(</span><span class="n">review_string</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Formating reviews string and separating them to list elements.&#39;&#39;&#39;</span>
+    
+    <span class="n">review_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">review_string</span></div>
+
+
+<span class="c1"># In[16]:</span>
+
+
+<div class="viewcode-block" id="apply_model_and_add_rating_to_df"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.apply_model_and_add_rating_to_df">[docs]</a><span class="k">def</span> <span class="nf">apply_model_and_add_rating_to_df</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Create dataframe with movie review and rating&quot;&quot;&quot;</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Reviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">format_review</span><span class="p">)</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Encoded_Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Reviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">review_encode</span><span class="p">)</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">pad_sequences</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;PAD&gt;&quot;</span><span class="p">],</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">250</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">movies_reviews</span><span class="p">[[</span><span class="s1">&#39;Encoded_Reviews&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">pad_sequences</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">word_index</span><span class="p">[</span><span class="s2">&quot;&lt;PAD&gt;&quot;</span><span class="p">],)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">movies_reviews</span><span class="p">[[</span><span class="s1">&#39;Encoded_Reviews&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies_reviews</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">)</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Encoded_Reviews&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;Preprocessed_Reviews&#39;</span><span class="p">:</span> <span class="s1">&#39;Rating&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<span class="c1"># In[17]:</span>
+
+
+<div class="viewcode-block" id="generate_csv_with_rating"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.generate_csv_with_rating">[docs]</a><span class="k">def</span> <span class="nf">generate_csv_with_rating</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Generate csv file witch predictions based on reviews by applying ml model.&#39;&#39;&#39;</span>
+    <span class="n">movies_reviews</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">GENERETED_FILE_WITH_RATING_NAME</span><span class="p">)</span></div>
+
+
+<span class="c1"># In[18]:</span>
+
+
+
+
+
+<span class="c1"># In[19]:</span>
+
+
+<span class="c1"># generate_csv_with_rating()</span>
+<div class="viewcode-block" id="run_rating_generate"><a class="viewcode-back" href="../../../index.html#etl_process.transform_part.movie_reviews_rating_adding.run_rating_generate">[docs]</a><span class="k">def</span> <span class="nf">run_rating_generate</span><span class="p">(</span><span class="n">rootpath</span><span class="p">):</span>
+    <span class="n">CSV_PATH</span> <span class="o">=</span> <span class="n">rootpath</span><span class="o">+</span><span class="s1">&#39;/csv_files/&#39;</span>
+    <span class="k">global</span> <span class="n">CSV_FILE_NAME</span>
+    <span class="k">global</span> <span class="n">GENERETED_FILE_WITH_RATING_NAME</span>
+    <span class="k">global</span> <span class="n">MODEL_NAME</span>
+    <span class="n">CSV_FILE_NAME</span> <span class="o">=</span> <span class="n">CSV_PATH</span> <span class="o">+</span> <span class="s1">&#39;movies_reviews.csv&#39;</span>
+    <span class="n">GENERETED_FILE_WITH_RATING_NAME</span> <span class="o">=</span> <span class="n">CSV_PATH</span> <span class="o">+</span> <span class="s1">&#39;movies_reviews_and_predictions.csv&#39;</span>
+    <span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="n">rootpath</span> <span class="o">+</span> <span class="s1">&#39;/transform_part/model.h5&#39;</span>
+    <span class="k">global</span> <span class="n">data</span>
+    <span class="k">global</span> <span class="n">model</span>
+    <span class="k">global</span> <span class="n">movies_reviews</span>
+    <span class="k">global</span> <span class="n">word_index</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">movies_reviews</span> <span class="o">=</span> <span class="n">load_data_model_and_csv</span><span class="p">()</span>
+    <span class="n">word_index</span> <span class="o">=</span> <span class="n">make_word_index</span><span class="p">()</span>
+    <span class="n">apply_model_and_add_rating_to_df</span><span class="p">()</span>
+    <span class="n">generate_csv_with_rating</span><span class="p">()</span></div>
+
+
+<span class="c1"># In[ ]:</span>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">ETL IMDB</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Bartosz Lenart, Krzysztof Koczwara.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

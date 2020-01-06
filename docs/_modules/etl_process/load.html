@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>etl_process.load &#8212; ETL IMDB 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for etl_process.load</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">Director</span><span class="p">,</span> <span class="n">Movies</span><span class="p">,</span> <span class="n">Ranking</span><span class="p">,</span> <span class="n">Cast</span><span class="p">,</span> <span class="n">MoviesCast</span><span class="p">,</span> <span class="n">Reviews</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="n">MOVIES_DETAILS_CSV_NAME</span> <span class="o">=</span> <span class="s1">&#39;movies_details.csv&#39;</span>
+<span class="n">MOVIES_CAST_CSV_NAME</span> <span class="o">=</span> <span class="s1">&#39;movies_cast.csv&#39;</span>
+<span class="n">MOVIES_REVIEWS_CSV_NAME</span> <span class="o">=</span> <span class="s1">&#39;movies_reviews_and_predictions.csv&#39;</span>
+<span class="n">CSV_PATH</span> <span class="o">=</span> <span class="s1">&#39;./csv_files/&#39;</span>
+
+
+<div class="viewcode-block" id="load_movies_details"><a class="viewcode-back" href="../../index.html#etl_process.load.load_movies_details">[docs]</a><span class="k">def</span> <span class="nf">load_movies_details</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load movie details and ranking from csv file to database.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CSV_PATH</span> <span class="o">+</span> <span class="n">MOVIES_DETAILS_CSV_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="c1">#Insert directors to database</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="n">director_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Director&#39;</span><span class="p">]</span>
+        <span class="n">director_exist</span> <span class="o">=</span> <span class="n">Director</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Director</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">director_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">director_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Director</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">director_name</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1">#Insert movies to database</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Title&#39;</span><span class="p">]</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Movie summary&#39;</span><span class="p">]</span>
+        <span class="n">director</span> <span class="o">=</span> <span class="n">Director</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Director</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">director_name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">new_movie</span> <span class="o">=</span> <span class="n">Movies</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">director</span><span class="o">=</span><span class="n">director</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="n">summary</span><span class="p">)</span>
+        <span class="n">movie_exist</span> <span class="o">=</span> <span class="n">Movies</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Movies</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">new_movie</span><span class="o">.</span><span class="n">title</span> <span class="ow">and</span> <span class="n">Movies</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">new_movie</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span> <span class="n">Movies</span><span class="o">.</span><span class="n">director</span> <span class="o">==</span> <span class="n">new_movie</span><span class="o">.</span><span class="n">director</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">movie_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_movie</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1">#Insert ranking to database</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="n">movie_id</span> <span class="o">=</span> <span class="n">Movies</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Movies</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">title</span> <span class="ow">and</span> <span class="n">Movies</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">year</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">ranking_exist</span> <span class="o">=</span> <span class="n">Ranking</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Ranking</span><span class="o">.</span><span class="n">movie_id</span> <span class="o">==</span> <span class="n">movie_id</span><span class="p">,</span> <span class="n">Ranking</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ranking_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Ranking</span><span class="p">(</span><span class="n">movie_id</span><span class="o">=</span><span class="n">movie_id</span><span class="p">,</span> <span class="n">ranking</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Ranking Position&#39;</span><span class="p">],</span> <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+
+<div class="viewcode-block" id="load_movies_cast"><a class="viewcode-back" href="../../index.html#etl_process.load.load_movies_cast">[docs]</a><span class="k">def</span> <span class="nf">load_movies_cast</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load movie cast from csv file to database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CSV_PATH</span> <span class="o">+</span> <span class="n">MOVIES_CAST_CSV_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Cast&#39;</span><span class="p">]</span>
+        <span class="n">cast_exist</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Cast</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cast_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Cast</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">mov</span> <span class="o">=</span> <span class="n">Movies</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+        <span class="n">movie_id</span> <span class="o">=</span> <span class="n">Movies</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Movies</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">cast_id</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Cast</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">moviecast_exist</span> <span class="o">=</span> <span class="n">MoviesCast</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">MoviesCast</span><span class="o">.</span><span class="n">movie_id</span> <span class="o">==</span> <span class="n">movie_id</span><span class="p">,</span> <span class="n">MoviesCast</span><span class="o">.</span><span class="n">cast_id</span> <span class="o">==</span> <span class="n">cast_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">moviecast_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">MoviesCast</span><span class="p">(</span><span class="n">movie_id</span><span class="o">=</span><span class="n">movie_id</span><span class="p">,</span> <span class="n">cast_id</span><span class="o">=</span><span class="n">cast_id</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="load_movies_reviews"><a class="viewcode-back" href="../../index.html#etl_process.load.load_movies_reviews">[docs]</a><span class="k">def</span> <span class="nf">load_movies_reviews</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load movie reviews to database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CSV_PATH</span> <span class="o">+</span> <span class="n">MOVIES_REVIEWS_CSV_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+        <span class="n">movie_id</span> <span class="o">=</span> <span class="n">Movies</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Movies</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">review</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Reviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">rating</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;Rating&#39;</span><span class="p">])</span><span class="o">*</span><span class="mi">100000</span>
+        <span class="n">review_exist</span> <span class="o">=</span> <span class="n">Reviews</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Reviews</span><span class="o">.</span><span class="n">review</span> <span class="o">==</span> <span class="n">review</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">review_exist</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Reviews</span><span class="p">(</span><span class="n">movie_id</span><span class="o">=</span><span class="n">movie_id</span><span class="p">,</span> <span class="n">review</span><span class="o">=</span><span class="n">review</span><span class="p">,</span> <span class="n">rating</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">rating</span><span class="p">)))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="run_load"><a class="viewcode-back" href="../../index.html#etl_process.load.run_load">[docs]</a><span class="k">def</span> <span class="nf">run_load</span><span class="p">(</span><span class="n">rootpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set path to csv files and run load functions</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rootpath : string</span>
+<span class="sd">                Path to application root folder</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CSV_PATH</span>
+    <span class="n">CSV_PATH</span> <span class="o">=</span> <span class="n">rootpath</span><span class="o">+</span><span class="s1">&#39;/csv_files/&#39;</span>
+    <span class="n">load_movies_details</span><span class="p">()</span>
+    <span class="n">load_movies_cast</span><span class="p">()</span>
+    <span class="n">load_movies_reviews</span><span class="p">()</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ETL IMDB</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Bartosz Lenart, Krzysztof Koczwara.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
